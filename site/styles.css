@@ -1,0 +1,62 @@
+/* Brand fonts, self-hosted (Latin subset). SIL Open Font License 1.1, see fonts/OFL-*.txt */
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/barlow-condensed-700.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-sans-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-sans-600.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+
+:root {
+  color-scheme: dark;
+  /* Hold Fire brand palette v0.1 (see "Hold Fire Colors") */
+  --backstop: #14202B;
+  --steel: #3E6D8E;
+  --amber: #F2A900;
+  --paper: #F4F1EA;
+  --slate: #8A949E;
+
+  --bg: var(--backstop);
+  --surface: #1C2A37;      /* raised Backstop */
+  --line: #2E3E4D;         /* dividers on Backstop */
+  --text: var(--paper);    /* 14.6:1 on bg */
+  --muted: #C9CFD5;        /* 10.5:1 on bg, 9.3:1 on surface */
+  --subtle: var(--slate);  /* 5.4:1 on bg; footer only */
+  --accent: var(--amber);  /* 8.2:1 on bg; use sparingly */
+  --accent-ink: var(--backstop); /* text on Amber, 8.2:1 */
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", "Helvetica Neue", sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --max: 46rem;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 1.0625rem/1.65 var(--body);
+}
+a { color: var(--text); text-decoration-color: var(--steel); text-underline-offset: .15em; }
+a:hover { text-decoration-color: var(--accent); }
+a:focus-visible, .button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 1rem; }
+header.site { padding: 1.5rem 0; }
+.brand { display: inline-flex; align-items: center; gap: .6rem; color: var(--text); text-decoration: none; font-family: var(--display); font-weight: 700; font-size: 1.4rem; letter-spacing: .06em; text-transform: uppercase; }
+.brand img { width: 2rem; height: 2rem; }
+.hero { padding: 3.5rem 0 2.5rem; }
+.eyebrow { display: inline-block; font-family: var(--mono); font-size: .8rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--line); border-radius: 999px; padding: .2rem .7rem; }
+h1, h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; text-wrap: balance; }
+h1 { font-size: clamp(2.6rem, 9vw, 4.2rem); line-height: .98; margin: 1rem 0 1.25rem; letter-spacing: .01em; }
+h2 { font-size: 1.75rem; line-height: 1.1; letter-spacing: .02em; margin: 0 0 .6rem; }
+.lede { font-size: 1.2rem; color: var(--muted); margin: 0 0 2rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.button { display: inline-block; padding: .75rem 1.2rem; border-radius: .5rem; font-weight: 600; text-decoration: none; border: 1px solid var(--accent); }
+.button.primary { background: var(--accent); color: var(--accent-ink); }
+.button.ghost { color: var(--text); border-color: var(--steel); }
+.button.ghost:hover { border-color: var(--accent); }
+section { padding: 2rem 0; border-top: 1px solid var(--line); }
+ul { padding-left: 1.2rem; margin: 0; }
+li { margin: .35rem 0; }
+.note { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--steel); border-radius: .5rem; padding: 1rem 1.2rem; color: var(--muted); }
+.note strong { color: var(--text); font-weight: 600; }
+strong, b { font-weight: 600; }
+footer.site { border-top: 1px solid var(--line); padding: 2rem 0 3rem; color: var(--subtle); font-size: .9rem; }
+footer.site a { color: var(--subtle); }
