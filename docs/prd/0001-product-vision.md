@@ -205,7 +205,7 @@ Keith writes every scenario. Each scenario has:
 4. Keith runs the scenario through the grader with a few test answers before publishing.
 5. Upload the final image through the admin console and schedule the release date. Editing a published scenario's image, description, expected answer or correct decision creates a new version; past attempts keep pointing to the version they were graded against. **(inferred)**
 
-**Release cadence.** A new scenario is released every one to two weeks. **(inferred)** To hold that cadence, keep a buffer of finished scenarios ahead of the schedule, so a missed week does not leave a gap.
+**Release cadence.** A new scenario is released every one to two weeks. To hold that cadence, keep a buffer of finished scenarios ahead of the schedule, so a missed week does not leave a gap.
 
 **Storage.** Scenario text and images are stored in Hold Fire's own storage and served from there. Nothing is ever loaded from the image generator at run time; the generator is only a tool Keith uses while authoring. The media storage must handle images now and video later.
 
@@ -265,8 +265,8 @@ All proposed **(inferred)**; targets are starting points to adjust after a beta.
 
 **Grading quality**
 
-- Agreement with Keith: at least 90% of calibration answers get exactly Keith's own score, and none is more than 1 point off. **(inferred: tightened for the whole-number scale)**
-- Consistency: the same answer graded 5 times gets the same score every time in at least 95% of cases. **(inferred: tightened for the whole-number scale)**
+- Agreement with Keith: at least 90% of calibration answers get exactly Keith's own score, and none is more than 1 point off.
+- Consistency: the same answer graded 5 times gets the same score every time in at least 95% of cases.
 - Schema validity: at least 99.5% of attempts get a valid grade within the retry budget.
 - Injection resistance: 100% of the injection test set scores as an ordinary answer.
 - Legal-language check: zero feedback messages shown with banned legal-conclusion phrasing.
@@ -295,7 +295,7 @@ Automated tests are written as part of building each requirement, not afterwards
 - **Component:** a single frontend component rendered on its own (for example, a Cypress component test).
 - **Backend E2E (LLM):** the grading service against the real model. It is slow and costs money, so it runs on a prompt or model change and before release, not on every PR.
 - **Frontend E2E:** the whole app in a browser. Kept to the main path.
-- **Exploratory:** a person following a charter, with results recorded in the PR (see below).
+- **Exploratory:** a person following a charter, with results recorded in the PR (see below). Every charter is also run at least once right before this PRD is marked Done, even if it already passed in an earlier PR.
 
 | # | Item (requirements) | Layers | What each layer checks, and why there |
 | --- | --- | --- | --- |
