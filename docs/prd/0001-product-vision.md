@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Version | 0.2 |
+| Version | 0.1 |
 | Date | 2026-11-27 |
 | Requested by | Keith Mendoza |
 | Author | Claude (drafted for Keith) |
@@ -75,7 +75,7 @@ Numbered so ADRs, issues and tests can cite them.
 1. The system must show a scenario's written context with no time limit and a Ready control.
 2. After Ready, the system must show the scenario's image for 3 seconds (a per-scenario setting, default 3 s) and then hide it. **(inferred)** Making the duration a per-scenario field costs little and allows harder variants later.
 3. The image must not be viewable again until the attempt is submitted, including by browser back, reload, or opening the image URL directly. **(inferred)** At minimum, the image should not be preloaded in a way that lets a trainee inspect it before Ready.
-4. The system must require a Shoot or No Shoot choice and a written reasoning before submission. The call must be made within 5 seconds of the image hiding. **(inferred: the clock starts when the image hides)** Past that, the attempt is recorded as "no decision". The trainee must then type why they did not choose, and that text is saved with the attempt so an admin can see it when reviewing the user's actions.
+4. The system must require a Shoot or No Shoot choice and a written reasoning before submission. The call must be made within 5 seconds of the image hiding. The clock starts when the image hides. Past that, the attempt is recorded as "no decision". The trainee must then type why they did not choose, and that text is saved with the attempt so an admin can see it when reviewing the user's actions.
 5. The reasoning field must enforce a maximum length (proposed 2,000 characters) and a minimum (proposed 20 characters) so an empty or one-word answer is caught before it costs a grading call.
 6. If the trainee leaves mid-attempt, or is inactive for 5 minutes at any step of the scenario, the attempt is abandoned and not scored. Resuming would let them see the image again.
 
@@ -90,6 +90,14 @@ Numbered so ADRs, issues and tests can cite them.
 
 11. The trainee must be able to see a list of their past attempts with scenario title, date, call, score, and open any one to see their reasoning and the feedback.
 12. If the trainee repeats a scenario, each attempt is kept separately.
+
+### Grade disputes
+
+Iteration 1 is a beta meant to collect feedback, so trainees must be able to flag a grade they think is unfair.
+
+- From the result screen or a past attempt, the trainee can flag the grade as unfair and add an optional note saying why.
+- Flagged attempts appear in the admin console for review, with the scenario, call, reasoning, score, feedback, prompt version and model ID.
+- Reports show the number of flagged attempts per scenario.
 
 ### Accounts
 
@@ -121,7 +129,7 @@ The grader is a single LLM call (LLM-as-judge) per attempt.
 - Scenario context: the written text the trainee read.
 - Image description: a written description of what the image shows. The grader never sees the image itself, so this description must match the image exactly (see Content pipeline).
 - Expected answer: Keith's point-by-point reading of the scene, the correct decision, and the reasoning a strong answer should contain.
-- Sample answers: examples of what scores 0, 3 and 5. Unlike the prototype, these are part of the prompt configuration, not code: they sit in the system instructions, or in a trusted message directly after them, and are edited in the admin console so prompt tuning needs no release (see Prompt design).
+- Sample answers: one generic set of examples of what scores 0, 3 and 5, shared by all scenarios. Unlike the prototype, these are part of the prompt configuration, not code: they sit in the system instructions, or in a trusted message directly after them, and are edited in the admin console so prompt tuning needs no release (see Prompt design).
 - The trainee's decision and reasoning.
 
 **Output (schema-enforced structured output):**
@@ -137,7 +145,7 @@ Asking for covered and missed points before the score tends to make scoring stea
 
 ### Scoring rules
 
-- The scale is whole numbers from 0 to 5, with no half points (the prototype's models returned half points; the schema now rejects them). 0 is a wrong decision. 3 means the trainee covered about half of the expected answer. 5 means they covered all of it. Most good answers are expected to land on 4, having missed "just that one bit", and that is intended.
+- The scale is whole numbers from 0 to 5, with no half points (the prototype's models returned half points; the schema now rejects them). 0 is a wrong decision. 3 means the trainee covered about half of the expected answer. 5 means they covered all of it. Most good answers are expected to land on 4, having missed "just that one bit", and that is acceptable.
 - A wrong call scores 0. Because the call is a button, not free text, this is enforced in code. On a wrong call, the grader is still asked for feedback (so the trainee learns why) but its score is ignored and recorded as 0. Wrong calls are always recorded, so trainees can later be shown their progression away from wrong calls, or a decline.
 - A right call with no scene-based reasoning scores low. The prototype gave 1.5 to a correct no-shoot with only a de-escalation plan, and that matches the intent.
 - De-escalation and safe actions (announcing yourself, making distance) are credited as sound judgment but do not substitute for reading the scene. **(inferred)** This matches how the prototype graded.
@@ -267,7 +275,7 @@ All proposed **(inferred)**; targets are starting points to adjust after a beta.
 
 - Grading latency: 95% of attempts graded within 10 seconds of submit.
 - Completion: at least 80% of attempts that reach Ready are submitted.
-- Disputes: share of results a trainee flags as unfair (if a flag control is added) stays under 5%, and each flag is reviewed by Keith.
+- Disputes: share of results a trainee flags as unfair stays under 5%, and each flag is reviewed by Keith.
 
 **Engagement and business**
 
@@ -306,7 +314,6 @@ All proposed **(inferred)**; targets are starting points to adjust after a beta.
 - **Learning outcomes research.** Moved to the "Hold Fire Training Research" document, which also covers whether and how a repeated scenario keeps its training value. Owner: Keith.
 - **Discount codes without payments.** The admin console manages discount codes, which only matter once payments exist. If the beta is free, codes can wait. Owner: Keith.
 - **Second reviewer for expected answers.** Whether someone besides Keith reviews scenarios before publishing. Owner: Keith.
-- **Dispute flag.** Whether trainees can flag a grade as unfair in iteration 1. Owner: Keith.
 
 ## Out of scope for this release
 
@@ -317,4 +324,3 @@ Video and multi-image scenarios, tap-to-shoot timing, trainer and agency feature
 | Version | Date | Summary |
 | --- | --- | --- |
 | 0.1 | 2026-11-26 | Initial draft of the iteration 1 product PRD. |
-| 0.2 | 2026-11-27 | Applied Keith's review answers: whole-number 0 to 5 scale; wrong calls recorded as 0; 5-second call limit with "no decision" and a typed reason; 5-minute inactivity abandon; account required for everything with admin-created beta accounts; admin-performed deletion on request; sample answers and prompt editable in the admin console; injection tests required for completion; feedback may reuse expected-answer wording without signalling it; open questions updated. Confirmed (inferred) items unmarked. |
