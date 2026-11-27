@@ -73,7 +73,7 @@ Numbered so ADRs, issues and tests can cite them.
 ### Scenario run
 
 1. The system must show a scenario's written context with no time limit and a Ready control.
-2. After Ready, the system must show the scenario's image for 3 seconds (a per-scenario setting, default 3 s) and then hide it. **(inferred)** Making the duration a per-scenario field costs little and allows harder variants later.
+2. After Ready, the system must show the scenario's image for its display time (a per-scenario setting, default 3 seconds) and then hide it. The display time used is recorded with each attempt. People take in the gist of a scene in well under a second (Potter et al., 2014; Fei-Fei et al., 2007), so 3 seconds is a safe default; no study has found a best length, so the per-scenario setting and the logged time let it be tuned later (see the Hold Fire Training Research document).
 3. The image must not be viewable again until the attempt is submitted, including by browser back, reload, or opening the image URL directly. **(inferred)** At minimum, the image should not be preloaded in a way that lets a trainee inspect it before Ready.
 4. The system must require a Shoot or No Shoot choice and a written reasoning before submission. The call must be made within 5 seconds of the image hiding. The clock starts when the image hides. Past that, the attempt is recorded as "no decision". The trainee must then type why they did not choose, and that text is saved with the attempt so an admin can see it when reviewing the user's actions.
 5. The reasoning field must enforce a maximum length (proposed 2,000 characters) and a minimum (proposed 20 characters) so an empty or one-word answer is caught before it costs a grading call.
@@ -152,7 +152,7 @@ Asking for covered and missed points before the score tends to make scoring stea
 
 ### Feedback and the correct answer
 
-The correct reading of the scene is not shown as its own block. The feedback discusses the trainee's answer point by point and, in doing so, says what the scene actually showed, for example "you read the object as a possible weapon; it was a rolled-up church bulletin, and the lit church behind him with people inside was the clue that an event had just let out." The prompt must ask for this style and must forbid legal conclusions ("this would be justified", "you would be charged"). Feedback may reuse wording from the expected answer word for word, but it must not say or suggest that it is quoting an expected answer or answer key.
+The correct reading of the scene is not shown as its own block. The feedback discusses the trainee's answer point by point and, in doing so, says what the scene actually showed, for example "you read the object as a possible weapon; it was a rolled-up church bulletin, and the lit church behind him with people inside was the clue that an event had just let out." The prompt must ask for this style and must forbid legal conclusions ("this would be justified", "you would be charged"). Feedback must name the decisive cues the trainee caught or missed and what to look for next time. It must not praise, blame or judge the person, and must not compare them with other users; feedback aimed at the person rather than the task can make performance worse (Kluger & DeNisi, 1996; Wisniewski, Zierer & Hattie, 2020; Shute, 2008). Feedback may reuse wording from the expected answer word for word, but it must not say or suggest that it is quoting an expected answer or answer key.
 
 ### Prompt design
 
@@ -344,6 +344,7 @@ Automated tests are written as part of building each requirement, not afterwards
 - **Grading model.** Sonnet 5.5 versus a cheaper model, decided by the calibration set and cost per grade. Owner: Keith.
 - **Retention of reasoning text.** How long attempts are kept (for example, until account deletion, or a fixed period). Owner: Keith, with attorney input.
 - **Replay and library size.** How many scenarios at beta launch, how often new ones publish, and whether repeating a scenario counts toward history and progress. Owner: Keith.
+- **Spaced resurfacing.** Spaced practice beats massed practice (Cepeda et al., 2006 and 2008; Dunlosky et al., 2013), which supports bringing earlier scenarios back on a schedule alongside new releases. Whether to do this, and how, belongs in the training session PRD. Owner: Keith.
 - **No-decision scoring.** How a "no decision" attempt is scored (for example 0, like a wrong call) and shown in history and reports. Owner: Keith.
 - **Age gate.** Minimum age to use the product, and whether to verify it or only ask. Owner: Keith, with attorney input.
 - **Beta users after launch.** Whether the beta users Keith enrolls get a lifetime free account. Owner: Keith.
