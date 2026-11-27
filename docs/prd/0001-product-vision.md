@@ -284,6 +284,44 @@ All proposed **(inferred)**; targets are starting points to adjust after a beta.
 - Cost per grade, tracked against the target subscription price.
 - Trainer interest: number of trainers or agencies asking about group access during the beta.
 
+## Test plan
+
+Automated tests are written as part of building each requirement, not afterwards. The plan follows the testing pyramid: most checks are unit tests, fewer are integration tests, and only a handful are end-to-end. One test plan item can be covered at several layers, but each layer checks something the others cannot. The same check is never repeated at another layer. For example, reasoning-length validation is one unit test of the rule and one component test of the field's message, not four copies of the same test. Tests check Hold Fire's own logic, not the libraries it uses. There is no test that sends a non-GUID or malformed JSON to an endpoint when the HTTP framework rejects it before our code runs.
+
+**Layers.** Tool choices belong in ADRs; the layers are:
+
+- **Unit:** pure logic with fakes for the clock, the LLM client and storage.
+- **Integration:** the backend with a real database and storage and a stub LLM, through its API.
+- **Component:** a single frontend component rendered on its own (for example, a Cypress component test).
+- **Backend E2E (LLM):** the grading service against the real model. It is slow and costs money, so it runs on a prompt or model change and before release, not on every PR.
+- **Frontend E2E:** the whole app in a browser. Kept to the main path.
+- **Exploratory:** a person following a charter, with results recorded in the PR (see below).
+
+| # | Item (requirements) | Layers | What each layer checks, and why there |
+| --- | --- | --- | --- |
+| T1 | Attempt timing: 3-second image, 5-second call clock, "no decision", 5-minute inactivity abandon (2, 4, 6) | Unit; Frontend E2E | Unit: the attempt state machine with a fake clock, covering every timeout and state change. Timing logic is pure, so this is the cheap, exact place to test it. Frontend E2E: one main-path run (disclaimer acknowledgment, Ready, image, call, reasoning, result) proves the pieces are wired together in a real browser. |
+| T2 | Image not viewable again before submit (3) | Integration; Exploratory | Integration: the image endpoint refuses the image before Ready, after it hides, and before submit. The server has to enforce this, so the test hits the API. Exploratory: back, reload, direct URL and browser dev tools, which automation covers poorly. |
+| T3 | Reasoning length limits (5) | Unit; Component | Unit: the server-side rule (minimum, maximum, boundaries). Component: the field shows the message and blocks submit. |
+| T4 | Wrong call scores 0 and is recorded (8, Scoring rules) | Unit; Integration | Unit: score calculation ignores the grader's score on a wrong call. Integration: the attempt is saved with 0 and the grader's feedback, so history and progression can use it. |
+| T5 | Grader output validation and retry (10, Validation and retry) | Unit; Integration | Unit, with a fake LLM client: malformed JSON, double-encoded JSON, half points, out-of-range scores and banned legal phrasing each trigger a retry, and after 2 retries the attempt is "not graded". Integration: a "not graded" attempt can be graded again without redoing the scenario. |
+| T6 | Prompt-injection protection (Prompt design) | Unit; Integration; Backend E2E (LLM) | Unit: the prompt builder puts trainee text only inside the fence and neutralizes fake closing tags. Integration: a submitted attempt produces an LLM request that uses the active prompt version, with the trainee text fenced in the user message. Backend E2E: the injection test set scores as ordinary weak answers against the real model. Passing it is required to call the grading feature complete, and before any prompt version is activated. |
+| T7 | Grading quality: calibration agreement and consistency (Success metrics) | Backend E2E (LLM) | Runs the calibration set against the real model and reports agreement with Keith and score spread. Only the real model can show this. |
+| T8 | Prompt version lifecycle (Prompt design) | Unit; Integration | Unit: draft, tested and active states, and a version cannot be activated without passing results. Integration: activation is admin-only, is written to the audit log, rollback works, and each graded attempt records the prompt version and model ID. |
+| T9 | Disclaimer and no legal conclusions (9, Disclaimers) | Component; Exploratory | Component: the result screen always renders the disclaimer. (The landing acknowledgment is covered by T1's E2E run, and banned phrasing by T5.) Exploratory: read the feedback from a batch of real attempts for tone and legal-sounding language a phrase list would miss. |
+| T10 | Accounts, admin access and deletion (13, 14, 15, 17) | Integration | Our authorization rules: non-admins are refused on every admin API, admins create accounts, a user's deletion request does not delete anything by itself, and an admin deletion removes reasoning and history. One table-driven test covers the admin API matrix. |
+| T11 | Audit log (19) | Integration | Each admin write action records who, what and when. Table-driven over the admin actions. |
+| T12 | Scenario versioning (16) | Integration | Editing a published scenario creates a new version, and past attempts still point to the version they were graded against. |
+| T13 | History, repeats and grade disputes (11, 12, Grade disputes) | Integration; Component | Integration: repeated attempts are stored separately, and a flag with its note shows up in the admin list with prompt and model versions. Component: the flag control on the result and history views. |
+| T14 | Reporting (20, 21, 22) | Unit; Integration | Unit: the aggregation math (completions, average score, release-to-first-run time, Shoot/No Shoot split, wrong-call share, flags) on fixed data. Integration: report responses contain no reasoning text. |
+
+**Exploratory testing.** Each feature PR lists the charters it ran and their results. The cheapest way to record them is a checklist in the PR description, using the "Exploratory testing" section of the PR template. It has one line per charter: the charter, the result (pass, or a link to the issue it found) and a short note. Attach a screenshot only when something fails. This needs no extra tooling, and the record merges with the PR. Starting charters for iteration 1:
+
+- Try to see the image again before submitting (T2).
+- Run a scenario on a phone over a slow connection, and check the 5-second call is still fair with large text or zoom turned on (T1).
+- Write hostile or odd answers by hand, beyond the injection set (T6).
+- Read the feedback from about ten real attempts for tone, accuracy and legal-sounding language (T9).
+- Walk through the admin console as a new admin: create a user, publish a scenario, review a flag (T10, T12, T13).
+
 ## Risks
 
 | Risk | Impact | Mitigation |
