@@ -9,7 +9,7 @@
 | Status | Draft |
 | Related ADRs | none yet |
 
-This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md` so it can move into the repo with little rework.
+This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md`.
 
 ## Summary
 
