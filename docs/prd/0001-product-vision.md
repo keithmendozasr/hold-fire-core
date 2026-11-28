@@ -106,7 +106,7 @@ Iteration 1 is a beta meant to collect feedback, so trainees must be able to fla
 ### Admin console
 
 15. The system must provide an admin console, available only to admin accounts, for managing scenarios, users, discount codes and similar operational data.
-16. Scenarios: an admin must be able to add, edit, preview, test-grade, schedule a release date, publish and unpublish a scenario, and upload its image. A published scenario that has attempts must keep its prior version for those attempts (see Content pipeline).
+16. Scenarios: an admin must be able to add, edit, preview, test-grade, schedule a release date, publish and unpublish a scenario, and upload its image. Editing a published scenario's image, description, expected answer, sample answers or correct decision must create a new version, and past attempts must keep pointing to the version they were graded against.
 17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request. Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
 18. Discount codes: an admin must be able to create, expire and see redemptions of discount and promotional codes, including codes for trainers and agencies. This depends on payments being in scope (see Open questions).
 19. Admin actions must be recorded in an audit log (who, what, when).
@@ -197,7 +197,7 @@ Keith writes every scenario. Each scenario has:
 | Display time | Seconds the image is shown (default 3). |
 | Release date | When the scenario goes live; used for scheduling and for the release-to-run report. |
 | Tags | Setting, difficulty, decision. |
-| Version | Changes when anything graded changes. |
+| Version | A new version is created as set out in requirement 16. |
 
 **Process:**
 
@@ -205,7 +205,7 @@ Keith writes every scenario. Each scenario has:
 2. Keith generates the image with an AI image generator from the image prompt (Higgsfield, or an alternative such as kie.ai; see Open questions).
 3. Keith reviews the image against the intended scene. Generators drift on small details (what is in a hand, whether earbuds are visible, lit or unlit windows), and those details are exactly what the grader scores. The image is the source of truth: the image description is rewritten to match what the image actually shows, or the image is regenerated. A short checklist for that review: every detail named in the expected answer is visible in the image; nothing visible in the image contradicts the expected answer; no readable brand names, logos or third-party marks; no realistic likeness of an identifiable real person.
 4. Keith writes the 0/3/5 sample answers and runs the scenario through the grader with a few test answers before publishing.
-5. Upload the final image through the admin console and schedule the release date. Editing a published scenario's image, description, expected answer, sample answers or correct decision creates a new version; past attempts keep pointing to the version they were graded against.
+5. Upload the final image through the admin console and schedule the release date. Later edits to a published scenario are versioned as set out in requirement 16.
 
 **Release cadence.** A new scenario is released every one to two weeks. To hold that cadence, keep a buffer of finished scenarios ahead of the schedule, so a missed week does not leave a gap.
 
