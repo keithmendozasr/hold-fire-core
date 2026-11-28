@@ -6,7 +6,7 @@
 | Date | 2026-11-27 |
 | Author | Keith Mendoza |
 | Owner | Keith Mendoza |
-| Status | Approved |
+| Status | Draft |
 | Related ADRs | none yet |
 
 This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md` so it can move into the repo with little rework. Items marked **(inferred)** are Claude's proposals, not decisions Keith has made; confirm or strike them before this moves to Accepted.
