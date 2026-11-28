@@ -85,6 +85,10 @@ Numbered so ADRs, issues and tests can cite them.
 9. The result screen must show the disclaimer, and grades and feedback must not read as legal conclusions, as set out in Disclaimers and legal guardrails.
 10. If grading fails after retries, the system must save the attempt as "not graded", tell the trainee, and let them retry grading without redoing the scenario.
 
+**Grading latency**
+
+23. The system must record the time from submit to graded result for each attempt, and grading must meet the latency target in Success metrics.
+
 ### History
 
 11. The trainee must be able to see a list of their past attempts with scenario title, date, call, score, and open any one to see their reasoning and the feedback.
@@ -116,6 +120,11 @@ Iteration 1 is a beta meant to collect feedback, so trainees must be able to fla
 20. For each scenario, the admin console must show the number of users who completed it, the average score, and the average time between the scenario's release date and each user's first run of it.
 21. Reports must also show the split of Shoot and No Shoot calls and the share of wrong calls per scenario, since a scenario that most people miss may have an image or description problem rather than a hard lesson.
 22. Reports use aggregate numbers only and never show reasoning text.
+
+**Completion and cost**
+
+24. Reports must show the share of attempts that reached Ready and were then submitted, so the completion target in Success metrics can be tracked.
+25. The system must record the token usage of each grading call, and reports must show cost per grade, so it can be tracked against the target subscription price. The cost may be computed from the recorded usage or taken from the provider's usage and billing data.
 
 ## Grading design
 
@@ -218,7 +227,7 @@ Keith writes every scenario. Each scenario has:
 ## Accounts and data
 
 - Accounts and attempt history are in scope.
-- Each attempt stores: user, scenario and scenario version, decision, reasoning text, score, feedback, covered and missed points, model ID, prompt version, timestamps, and grading status.
+- Each attempt stores: user, scenario and scenario version, decision, reasoning text, score, feedback, covered and missed points, model ID, prompt version, token usage, timestamps, and grading status.
 - The trainee's reasoning text is stored. It may contain things people would not want shared (for example, a description of what they would do with a firearm), so treat it as sensitive: encrypt at rest, restrict internal access, never use it in marketing, and never send it to any service other than the grading model.
 - The retention period for reasoning text is undecided. Account deletion removes it (requirement 14).
 - Whether attempts are sent to the model provider under terms that exclude them from training should be confirmed for the chosen provider and stated in the privacy policy.
