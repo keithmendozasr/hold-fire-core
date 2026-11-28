@@ -231,7 +231,7 @@ Keith writes every scenario. Each scenario has:
 - The trainee's reasoning text is stored. It may contain things people would not want shared (for example, a description of what they would do with a firearm), so treat it as sensitive: encrypt at rest, restrict internal access, never use it in marketing, and never send it to any service other than the grading model.
 - The retention period for reasoning text is undecided. Account deletion removes it (requirement 14).
 - Whether attempts are sent to the model provider under terms that exclude them from training should be confirmed for the chosen provider and stated in the privacy policy.
-- A privacy policy and terms of service are needed before public launch, and they should be part of the attorney review below.
+- The privacy policy and terms of service are tracked in the Launch checklist.
 - Backend stack and hosting are undecided; see Architecture direction.
 
 ## Architecture direction
@@ -263,6 +263,17 @@ This section states the product's requirements on the architecture. The decision
 - **No claim of certification or qualification.** Completing scenarios or high scores do not count toward any permit, license or course requirement, and the product does not say they do.
 - **Attorney review recommended** before public launch, covering the disclaimer wording, terms of service, privacy policy, the expected answers' framing (so they read as tactics and judgment, not legal guidance), and any liability exposure from a trainee relying on a score.
 - **Age gate:** open (see Open questions).
+
+## Launch checklist
+
+Each item must be done before public launch.
+
+- [ ] Privacy policy published.
+- [ ] Terms of service published.
+- [ ] Attorney review completed, covering the privacy policy, the terms of service and the matters listed in Disclaimers and legal guardrails.
+- [ ] Age gate decided and in place (see Open questions).
+
+Trainee answers are sent to a third-party model provider for grading, and the privacy policy must say so (see Accounts and data for the check on the provider's training terms).
 
 ## Business context
 
