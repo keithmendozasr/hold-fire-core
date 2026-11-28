@@ -4,10 +4,9 @@
 | --- | --- |
 | Version | 0.1 |
 | Date | 2026-11-27 |
-| Requested by | Keith Mendoza |
-| Author | Claude (drafted for Keith) |
+| Author | Keith Mendoza |
 | Owner | Keith Mendoza |
-| Status | Draft |
+| Status | Approved |
 | Related ADRs | none yet |
 
 This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md` so it can move into the repo with little rework. Items marked **(inferred)** are Claude's proposals, not decisions Keith has made; confirm or strike them before this moves to Accepted.
@@ -74,7 +73,7 @@ Numbered so ADRs, issues and tests can cite them.
 
 1. The system must show a scenario's written context with no time limit and a Ready control.
 2. After Ready, the system must show the scenario's image for its display time (a per-scenario setting, default 3 seconds) and then hide it. The display time used is recorded with each attempt. People take in the gist of a scene in well under a second (Potter et al., 2014; Fei-Fei et al., 2007), so 3 seconds is a safe default; no study has found a best length, so the per-scenario setting and the logged time let it be tuned later (see the Hold Fire Training Research document).
-3. The image must not be viewable again until the attempt is submitted, including by browser back, reload, or opening the image URL directly. **(inferred)** At minimum, the image should not be preloaded in a way that lets a trainee inspect it before Ready.
+3. The image must not be viewable again until the attempt is submitted, including by browser back, reload, or opening the image URL directly. At minimum, the image should not be preloaded in a way that lets a trainee inspect it before Ready.
 4. The system must require a Shoot or No Shoot choice and a written reasoning before submission. The call must be made within 5 seconds of the image hiding. The clock starts when the image hides. Past that, the attempt is recorded as "no decision". The trainee must then type why they did not choose, and that text is saved with the attempt so an admin can see it when reviewing the user's actions.
 5. The reasoning field must enforce a maximum length (proposed 2,000 characters) and a minimum (proposed 20 characters) so an empty or one-word answer is caught before it costs a grading call.
 6. If the trainee leaves mid-attempt, or is inactive for 5 minutes at any step of the scenario, the attempt is abandoned and not scored. Resuming would let them see the image again.
@@ -108,7 +107,7 @@ Iteration 1 is a beta meant to collect feedback, so trainees must be able to fla
 
 15. The system must provide an admin console, available only to admin accounts, for managing scenarios, users, discount codes and similar operational data.
 16. Scenarios: an admin must be able to add, edit, preview, test-grade, schedule a release date, publish and unpublish a scenario, and upload its image. A published scenario that has attempts must keep its prior version for those attempts (see Content pipeline).
-17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request. **(inferred)** Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
+17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request. Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
 18. Discount codes: an admin must be able to create, expire and see redemptions of discount and promotional codes, including codes for trainers and agencies. This depends on payments being in scope (see Open questions).
 19. Admin actions must be recorded in an audit log (who, what, when).
 
@@ -168,7 +167,7 @@ The correct reading of the scene is not shown as its own block. The feedback dis
 
 - The response must parse against the schema, and `score` must be a number in the allowed set. The prototype sometimes returned double-encoded JSON strings, which is why schema-enforced structured output is required rather than prompt-only formatting.
 - On a schema failure or an out-of-range score, retry (proposed up to 2 retries). After that, mark the attempt "not graded" (requirement 10). Never show a score that failed validation.
-- **(inferred)** Feedback text should be checked for banned legal-conclusion phrasing before display; a hit triggers a retry.
+- Feedback text should be checked for banned legal-conclusion phrasing before display; a hit triggers a retry.
 
 ### Model choice
 
@@ -179,7 +178,7 @@ Prototype results on the parking lot scenario (from LLM-notes.txt):
 | Correct call, no scene reasoning | not run | not run | 1.5, 1.5 |
 | Strong answer (also the prompt's own 5-anchor) | 4 | 4.5 | 5 |
 
-Sonnet 5.5 was the most consistent and matched Keith's intent. The Haiku models under-scored an answer that was literally the prompt's 5-point example, which is a meaningful miss. The final model is open and depends on cost per grade (see Open questions). **(inferred)** Before choosing, run a calibration set: about 10 scenarios with 5 to 8 answers each that Keith has scored by hand, each graded 5 times per candidate model, measuring agreement with Keith and run-to-run spread. The strong answer above should not be in the test set because it is also the anchor.
+Sonnet 5.5 was the most consistent and matched Keith's intent. The Haiku models under-scored an answer that was literally the prompt's 5-point example, which is a meaningful miss. The final model is open and depends on cost per grade (see Open questions). Before choosing, run a calibration set: about 10 scenarios with 5 to 8 answers each that Keith has scored by hand, each graded 5 times per candidate model, measuring agreement with Keith and run-to-run spread. The strong answer above should not be in the test set because it is also the anchor.
 
 ## Content pipeline (scenarios and images)
 
@@ -197,16 +196,16 @@ Keith writes every scenario. Each scenario has:
 | Sample answers | Example answers for 0 (right call, no valid scene reading), 3 and 5, sent to the grader as trusted content. |
 | Display time | Seconds the image is shown (default 3). |
 | Release date | When the scenario goes live; used for scheduling and for the release-to-run report. |
-| Tags | Setting, difficulty, decision. **(inferred)** |
+| Tags | Setting, difficulty, decision. |
 | Version | Changes when anything graded changes. |
 
 **Process:**
 
 1. Keith writes the context, the intended scene, the correct decision and the expected answer.
 2. Keith generates the image with an AI image generator from the image prompt (Higgsfield, or an alternative such as kie.ai; see Open questions).
-3. Keith reviews the image against the intended scene. Generators drift on small details (what is in a hand, whether earbuds are visible, lit or unlit windows), and those details are exactly what the grader scores. The image is the source of truth: the image description is rewritten to match what the image actually shows, or the image is regenerated. **(inferred)** A short checklist for that review: every detail named in the expected answer is visible in the image; nothing visible in the image contradicts the expected answer; no readable brand names, logos or third-party marks; no realistic likeness of an identifiable real person.
+3. Keith reviews the image against the intended scene. Generators drift on small details (what is in a hand, whether earbuds are visible, lit or unlit windows), and those details are exactly what the grader scores. The image is the source of truth: the image description is rewritten to match what the image actually shows, or the image is regenerated. A short checklist for that review: every detail named in the expected answer is visible in the image; nothing visible in the image contradicts the expected answer; no readable brand names, logos or third-party marks; no realistic likeness of an identifiable real person.
 4. Keith writes the 0/3/5 sample answers and runs the scenario through the grader with a few test answers before publishing.
-5. Upload the final image through the admin console and schedule the release date. Editing a published scenario's image, description, expected answer, sample answers or correct decision creates a new version; past attempts keep pointing to the version they were graded against. **(inferred)**
+5. Upload the final image through the admin console and schedule the release date. Editing a published scenario's image, description, expected answer, sample answers or correct decision creates a new version; past attempts keep pointing to the version they were graded against.
 
 **Release cadence.** A new scenario is released every one to two weeks. To hold that cadence, keep a buffer of finished scenarios ahead of the schedule, so a missed week does not leave a gap.
 
@@ -220,10 +219,10 @@ Keith writes every scenario. Each scenario has:
 
 - Accounts and attempt history are in scope.
 - Each attempt stores: user, scenario and scenario version, decision, reasoning text, score, feedback, covered and missed points, model ID, prompt version, timestamps, and grading status.
-- The trainee's reasoning text is stored. It may contain things people would not want shared (for example, a description of what they would do with a firearm), so treat it as sensitive: encrypt at rest, restrict internal access, never use it in marketing, and never send it to any service other than the grading model. **(inferred)**
+- The trainee's reasoning text is stored. It may contain things people would not want shared (for example, a description of what they would do with a firearm), so treat it as sensitive: encrypt at rest, restrict internal access, never use it in marketing, and never send it to any service other than the grading model.
 - The retention period for reasoning text is undecided. Account deletion removes it (requirement 14).
-- **(inferred)** Whether attempts are sent to the model provider under terms that exclude them from training should be confirmed for the chosen provider and stated in the privacy policy.
-- **(inferred)** A privacy policy and terms of service are needed before public launch, and they should be part of the attorney review below.
+- Whether attempts are sent to the model provider under terms that exclude them from training should be confirmed for the chosen provider and stated in the privacy policy.
+- A privacy policy and terms of service are needed before public launch, and they should be part of the attorney review below.
 - Backend stack and hosting are undecided; see Architecture direction.
 
 ## Architecture direction
@@ -249,10 +248,10 @@ This section states the product's requirements on the architecture. The decision
 
 ## Disclaimers and legal guardrails
 
-- **Training aid, not legal advice.** Shown on the landing page, acknowledged once before the first scenario, and shown on every result screen. Proposed wording: "Hold Fire is a training aid for practicing judgment. It is not legal advice, and a score is not a legal opinion on whether any use of force would be lawful. Self-defense law varies by jurisdiction; consult a qualified attorney and your local law." **(inferred)** wording, to be reviewed.
+- **Training aid, not legal advice.** Shown on the landing page, acknowledged once before the first scenario, and shown on every result screen. Proposed wording: "Hold Fire is a training aid for practicing judgment. It is not legal advice, and a score is not a legal opinion on whether any use of force would be lawful. Self-defense law varies by jurisdiction; consult a qualified attorney and your local law." wording, to be reviewed.
 - **Grades and feedback are not legal conclusions.** The prompt forbids legal-conclusion language, and feedback is checked for it (see Grading design).
 - **No third-party names or logos.** No NRA or other organization's names, logos or course names in the product or its marketing. Keith's NRA Pistol Instructor certification does not cover this product, so it is not used to endorse or certify it.
-- **No claim of certification or qualification.** Completing scenarios or high scores do not count toward any permit, license or course requirement, and the product does not say they do. **(inferred)**
+- **No claim of certification or qualification.** Completing scenarios or high scores do not count toward any permit, license or course requirement, and the product does not say they do.
 - **Attorney review recommended** before public launch, covering the disclaimer wording, terms of service, privacy policy, the expected answers' framing (so they read as tactics and judgment, not legal guidance), and any liability exposure from a trainee relying on a score.
 - **Age gate:** open (see Open questions).
 
@@ -260,11 +259,11 @@ This section states the product's requirements on the architecture. The decision
 
 - Licensed BUSL-1.1 (source-available), with a change to Apache-2.0 on 2030-11-26.
 - Hosted service. Monetization is a subscription, with promotional or discounted deals for trainers and agencies.
-- Cost per grade drives model choice and pricing. **(inferred)** Per-attempt LLM cost should be tracked from the first beta so subscription pricing can be set against real usage.
+- Cost per grade drives model choice and pricing. Per-attempt LLM cost should be tracked from the first beta so subscription pricing can be set against real usage.
 
 ## Success metrics
 
-All proposed **(inferred)**; targets are starting points to adjust after a beta.
+All proposed; targets are starting points to adjust after a beta.
 
 **Grading quality**
 
@@ -330,17 +329,17 @@ Automated tests are written as part of building each requirement, not afterwards
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
 | Small library, so replay is limited | Trainees run out of new scenarios quickly and churn; repeats become memorization. | Release every one to two weeks with a buffer of finished scenarios; set expectations in the beta; mark completed scenarios; consider variants of one scene (same setting, different decisive detail). |
-| Cadence slips | One person writes every scenario, so a busy stretch stalls releases. | Keep a buffer of scheduled scenarios; the admin console's release date makes the buffer visible. **(inferred)** |
+| Cadence slips | One person writes every scenario, so a busy stretch stalls releases. | Keep a buffer of scheduled scenarios; the admin console's release date makes the buffer visible. |
 | Portability adds cost | Abstractions slow early work, or a lowest-common-denominator design gives up useful features. | Put boundaries only where a swap is realistic (LLM, storage, database, identity, payments); record each in an ADR. |
 | Image and description disagree | The grader scores against details the trainee could not see, or penalizes a correct read. | Image is the source of truth; review checklist; test answers before publish. |
 | Grader inconsistency or bias | Unfair scores erode trust. | Calibration set, schema output, covered/missed points, model and prompt versioning, review of flagged results. |
 | Prompt injection via reasoning text | Inflated scores, or the grader saying something off-brand. | Fenced input, never-follow rule in the system prompt, injection test set, output validation. |
 | Feedback read as legal advice | Liability and reputational harm. | Disclaimers, banned-phrase rules and checks, attorney review. |
-| Training a "shoot" bias, or teaching the wrong lesson | A tool meant to build restraint could do the opposite if scenarios skew or expected answers are wrong. | Balance the library across both decisions; have a second qualified reviewer read expected answers. **(inferred)** |
+| Training a "shoot" bias, or teaching the wrong lesson | A tool meant to build restraint could do the opposite if scenarios skew or expected answers are wrong. | Balance the library across both decisions; have a second qualified reviewer read expected answers. |
 | Image generator terms | Output cannot be used commercially, or terms change. | Check terms before publishing; keep source prompts so images can be regenerated elsewhere. |
 | Cost per grade | A strong model may cost too much for the price point. | Track cost from day one; compare models on the calibration set; cache the static prompt prefix. |
 | Sensitive stored text | A breach exposes what people wrote about using force. | Encryption, minimal access, retention limit, deletion. |
-| Graphic or disturbing images | Some users, or app stores and ad platforms later, may object. | Keep images non-graphic; no gore; content guidelines for scenarios. **(inferred)** |
+| Graphic or disturbing images | Some users, or app stores and ad platforms later, may object. | Keep images non-graphic; no gore; content guidelines for scenarios. |
 
 ## Open questions
 
