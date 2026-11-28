@@ -129,7 +129,7 @@ The grader is a single LLM call (LLM-as-judge) per attempt.
 - Scenario context: the written text the trainee read.
 - Image description: a written description of what the image shows. The grader never sees the image itself, so this description must match the image exactly (see Content pipeline).
 - Expected answer: Keith's point-by-point reading of the scene, the correct decision, and the reasoning a strong answer should contain.
-- Sample answers: examples of what scores 0, 3 and 5, written for each scenario as part of the scenario record (as in the prototype). They are trusted content: they go in a trusted message directly after the system instructions, never in the same block as the trainee's fenced text. Analytic rubrics paired with example answers make scoring more consistent (Jonsson & Svingby, 2007, rated moderate in the Hold Fire Training Research document).
+- Sample answers: examples of what scores 0, 3 and 5, written for each scenario as part of the scenario record. The 0 example is the right call with no valid reading of the scene (a lucky guess, the right call for the wrong reason or from bias, reasoning that contradicts the call, or a non-answer). It is not a wrong call, as it was in the prototype, because code already scores wrong calls. They are trusted content: they go in a trusted message directly after the system instructions, never in the same block as the trainee's fenced text. Analytic rubrics paired with example answers make scoring more consistent (Jonsson & Svingby, 2007, rated moderate in the Hold Fire Training Research document).
 - The trainee's decision and reasoning.
 
 **Output (schema-enforced structured output):**
@@ -145,7 +145,7 @@ Asking for covered and missed points before the score tends to make scoring stea
 
 ### Scoring rules
 
-- The scale is whole numbers from 0 to 5, with no half points (the prototype's models returned half points; the schema now rejects them). 0 is a wrong decision. 3 means the trainee covered about half of the expected answer. 5 means they covered all of it. Most good answers are expected to land on 4, having missed "just that one bit", and that is acceptable.
+- The scale is whole numbers from 0 to 5, with no half points (the prototype's models returned half points; the schema now rejects them). 0 is either a wrong decision (set in code) or the right decision with no valid reading of the scene (set by the grader). 3 means the trainee covered about half of the expected answer. 5 means they covered all of it. Most good answers are expected to land on 4, having missed "just that one bit", and that is acceptable.
 - A wrong call scores 0. Because the call is a button, not free text, this is enforced in code. On a wrong call, the grader is still asked for feedback (so the trainee learns why) but its score is ignored and recorded as 0. Wrong calls are always recorded, so trainees can later be shown their progression away from wrong calls, or a decline.
 - A right call with no scene-based reasoning scores low. The prototype gave 1.5 to a correct no-shoot with only a de-escalation plan, and that matches the intent.
 - De-escalation and safe actions (announcing yourself, making distance) are credited as sound judgment but do not substitute for reading the scene. This matches how the prototype graded.
@@ -194,7 +194,7 @@ Keith writes every scenario. Each scenario has:
 | Image description | What the grader is told the image shows. |
 | Correct decision | Shoot or No Shoot. |
 | Expected answer | The points a strong answer covers. |
-| Sample answers | Example answers for 0, 3 and 5, sent to the grader as trusted content. |
+| Sample answers | Example answers for 0 (right call, no valid scene reading), 3 and 5, sent to the grader as trusted content. |
 | Display time | Seconds the image is shown (default 3). |
 | Release date | When the scenario goes live; used for scheduling and for the release-to-run report. |
 | Tags | Setting, difficulty, decision. **(inferred)** |
