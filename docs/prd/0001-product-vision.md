@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Version | 0.1 |
+| Version | 0.2 |
 | Date | 2026-11-27 |
 | Author | Keith Mendoza |
 | Owner | Keith Mendoza |
@@ -386,3 +386,4 @@ Video and multi-image scenarios, tap-to-shoot timing, trainer and agency feature
 | Version | Date | Summary |
 | --- | --- | --- |
 | 0.1 | 2026-11-26 | Initial draft of the iteration 1 product PRD. |
+| 0.2 | 2026-11-27 | Clean-up: status set to Draft, duplicated rules consolidated, metric requirements and launch checklist added. |
