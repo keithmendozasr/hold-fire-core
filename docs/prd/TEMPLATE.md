@@ -46,6 +46,14 @@ _Confirm how this feature honors the guardrails in `CLAUDE.md`, or mark each "no
 
 _How will we know it worked? Prefer measurable signals._
 
+## Test plan
+
+_Number each item (T1, T2, ...) and cite the requirements it covers. For each item, name the layer or layers that cover it (unit, integration, component, backend E2E with the LLM, frontend E2E, exploratory) and what each layer checks. Follow the testing pyramid: an item can span layers, but never repeat the same check at another layer, and never test what a library or framework already guarantees. List the exploratory charters; their results are recorded in the PR's "Exploratory testing" checklist._
+
+| # | Item (requirements) | Layers | What each layer checks, and why there |
+| --- | --- | --- | --- |
+| T1 | _..._ | _..._ | _..._ |
+
 ## Open questions
 
 - _Unresolved decision, with who needs to answer it._

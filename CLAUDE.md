@@ -13,6 +13,15 @@ Product requirements (PRDs) and architecture decisions (ADRs) live in `docs/`. T
 - Commits have to be signed.
 - Use the latest stable versions of libraries and tools, but hang back on fresh X.Y.0 releases of libraries with a history of quick follow-up patches, and say so when you do.
 - At the start of a work session, list dependencies (including GitHub Actions versions) that have upgrades available. Do not apply them; just raise them.
+- A doc in `docs/` keeps its version while its PR is open. Bump the version and add a change-log row only when a revision merges to main.
+
+## Testing
+
+- Add or update automated tests as part of every change, following the test plan in the PRD that covers the work.
+- If no test plan covers the work you are asked to do, stop and ask the code owners for permission before starting.
+- Follow the testing pyramid. A test plan item can span layers, but each layer checks something the others cannot: never repeat the same check at another layer.
+- Test our own logic, not the libraries. For example, don't test that the HTTP framework rejects malformed JSON or a non-GUID before our code runs.
+- Record exploratory test results in the PR description's "Exploratory testing" checklist.
 
 ## License
 
