@@ -107,7 +107,7 @@ Iteration 1 is a beta meant to collect feedback, so trainees must be able to fla
 
 15. The system must provide an admin console, available only to admin accounts, for managing scenarios, users, discount codes and similar operational data.
 16. Scenarios: an admin must be able to add, edit, preview, test-grade, schedule a release date, publish and unpublish a scenario, and upload its image. Editing a published scenario's image, description, expected answer, sample answers or correct decision must create a new version, and past attempts must keep pointing to the version they were graded against.
-17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request. Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
+17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request as set out in requirement 14. Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
 18. Discount codes: an admin must be able to create, expire and see redemptions of discount and promotional codes, including codes for trainers and agencies. This depends on payments being in scope (see Open questions).
 19. Admin actions must be recorded in an audit log (who, what, when).
 
