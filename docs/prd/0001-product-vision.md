@@ -2,14 +2,14 @@
 
 | Field | Value |
 | --- | --- |
-| Version | 0.1 |
+| Version | 0.2 |
 | Date | 2026-11-27 |
 | Author | Keith Mendoza |
 | Owner | Keith Mendoza |
-| Status | Approved |
+| Status | Accepted |
 | Related ADRs | none yet |
 
-This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md` so it can move into the repo with little rework. Items marked **(inferred)** are Claude's proposals, not decisions Keith has made; confirm or strike them before this moves to Accepted.
+This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md`.
 
 ## Summary
 
@@ -33,7 +33,7 @@ Hold Fire targets that gap with short, repeatable scenarios that reward noticing
 2. Grading is consistent: the same answer to the same scenario gets the same whole-number score across repeated runs.
 3. Feedback teaches. It explains the score and weaves the scene's correct reading into that explanation, rather than handing over a separate answer key.
 4. The trainee can review their past attempts, scores and feedback.
-5. The "training aid, not legal advice" disclaimer is visible up front and on every result.
+5. The training-aid disclaimer is shown as set out in Disclaimers and legal guardrails.
 6. Keith can author a scenario (text, image, image description and expected answer) and its 0/3/5 sample answers, publish it, and tune the grading prompt, all without a code change, through an admin console that also manages users and discount codes.
 7. A new scenario is released every one to two weeks, so trainees have a steady reason to come back.
 8. Keith can see how scenarios perform: who completed each one, average scores, and how long after release trainees run it.
@@ -53,7 +53,7 @@ Hold Fire targets that gap with short, repeatable scenarios that reward noticing
 
 ## User flow
 
-1. **Landing and disclaimer.** The trainee lands on holdfire.app. The "training aid, not legal advice" disclaimer is on the landing page, and the trainee must acknowledge it once before their first scenario.
+1. **Landing and disclaimer.** The trainee lands on holdfire.app and meets the disclaimer as set out in Disclaimers and legal guardrails.
 2. **Sign in.** An account is required for everything, including trying a first scenario; there is no anonymous sample. The landing page shows a description with screenshots so visitors can decide whether they like what they see. In iteration 1 Keith creates beta accounts through the admin console; whether people can also sign up on their own is open (see Open questions).
 3. **Pick a scenario.** The trainee chooses from the library, or takes the next one they have not done. Scenarios they have already done are marked.
 4. **Read the scenario.** The written context appears (where they are, what they hear, what is happening). There is no time limit on reading.
@@ -82,8 +82,12 @@ Numbered so ADRs, issues and tests can cite them.
 
 7. The system must grade each submitted attempt as described in Grading design and show the score and feedback.
 8. The decision (Shoot or No Shoot) must be checked against the scenario's correct decision in code. A wrong call scores 0 regardless of the reasoning.
-9. The result screen must show the disclaimer and must not describe the call as legal, lawful, justified or unjustified in a legal sense.
+9. The result screen must show the disclaimer, and grades and feedback must not read as legal conclusions, as set out in Disclaimers and legal guardrails.
 10. If grading fails after retries, the system must save the attempt as "not graded", tell the trainee, and let them retry grading without redoing the scenario.
+
+**Grading latency**
+
+23. The system must record the time from submit to graded result for each attempt, and grading must meet the latency target in Success metrics.
 
 ### History
 
@@ -106,8 +110,8 @@ Iteration 1 is a beta meant to collect feedback, so trainees must be able to fla
 ### Admin console
 
 15. The system must provide an admin console, available only to admin accounts, for managing scenarios, users, discount codes and similar operational data.
-16. Scenarios: an admin must be able to add, edit, preview, test-grade, schedule a release date, publish and unpublish a scenario, and upload its image. A published scenario that has attempts must keep its prior version for those attempts (see Content pipeline).
-17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request. Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
+16. Scenarios: an admin must be able to add, edit, preview, test-grade, schedule a release date, publish and unpublish a scenario, and upload its image. Editing a published scenario's image, description, expected answer, sample answers or correct decision must create a new version, and past attempts must keep pointing to the version they were graded against.
+17. Users: an admin must be able to find a user, see their account status and attempt count, disable or re-enable an account, and carry out a deletion request as set out in requirement 14. Admins should not be able to read a user's reasoning text by default; access to it should be a separate, logged permission, since that text is sensitive.
 18. Discount codes: an admin must be able to create, expire and see redemptions of discount and promotional codes, including codes for trainers and agencies. This depends on payments being in scope (see Open questions).
 19. Admin actions must be recorded in an audit log (who, what, when).
 
@@ -116,6 +120,11 @@ Iteration 1 is a beta meant to collect feedback, so trainees must be able to fla
 20. For each scenario, the admin console must show the number of users who completed it, the average score, and the average time between the scenario's release date and each user's first run of it.
 21. Reports must also show the split of Shoot and No Shoot calls and the share of wrong calls per scenario, since a scenario that most people miss may have an image or description problem rather than a hard lesson.
 22. Reports use aggregate numbers only and never show reasoning text.
+
+**Completion and cost**
+
+24. Reports must show the share of attempts that reached Ready and were then submitted, so the completion target in Success metrics can be tracked.
+25. The system must record the token usage of each grading call, and reports must show cost per grade, so it can be tracked against the target subscription price. The cost may be computed from the recorded usage or taken from the provider's usage and billing data.
 
 ## Grading design
 
@@ -197,7 +206,7 @@ Keith writes every scenario. Each scenario has:
 | Display time | Seconds the image is shown (default 3). |
 | Release date | When the scenario goes live; used for scheduling and for the release-to-run report. |
 | Tags | Setting, difficulty, decision. |
-| Version | Changes when anything graded changes. |
+| Version | A new version is created as set out in requirement 16. |
 
 **Process:**
 
@@ -205,7 +214,7 @@ Keith writes every scenario. Each scenario has:
 2. Keith generates the image with an AI image generator from the image prompt (Higgsfield, or an alternative such as kie.ai; see Open questions).
 3. Keith reviews the image against the intended scene. Generators drift on small details (what is in a hand, whether earbuds are visible, lit or unlit windows), and those details are exactly what the grader scores. The image is the source of truth: the image description is rewritten to match what the image actually shows, or the image is regenerated. A short checklist for that review: every detail named in the expected answer is visible in the image; nothing visible in the image contradicts the expected answer; no readable brand names, logos or third-party marks; no realistic likeness of an identifiable real person.
 4. Keith writes the 0/3/5 sample answers and runs the scenario through the grader with a few test answers before publishing.
-5. Upload the final image through the admin console and schedule the release date. Editing a published scenario's image, description, expected answer, sample answers or correct decision creates a new version; past attempts keep pointing to the version they were graded against.
+5. Upload the final image through the admin console and schedule the release date. Later edits to a published scenario are versioned as set out in requirement 16.
 
 **Release cadence.** A new scenario is released every one to two weeks. To hold that cadence, keep a buffer of finished scenarios ahead of the schedule, so a missed week does not leave a gap.
 
@@ -218,11 +227,11 @@ Keith writes every scenario. Each scenario has:
 ## Accounts and data
 
 - Accounts and attempt history are in scope.
-- Each attempt stores: user, scenario and scenario version, decision, reasoning text, score, feedback, covered and missed points, model ID, prompt version, timestamps, and grading status.
+- Each attempt stores: user, scenario and scenario version, decision, reasoning text, score, feedback, covered and missed points, model ID, prompt version, token usage, timestamps, and grading status.
 - The trainee's reasoning text is stored. It may contain things people would not want shared (for example, a description of what they would do with a firearm), so treat it as sensitive: encrypt at rest, restrict internal access, never use it in marketing, and never send it to any service other than the grading model.
 - The retention period for reasoning text is undecided. Account deletion removes it (requirement 14).
 - Whether attempts are sent to the model provider under terms that exclude them from training should be confirmed for the chosen provider and stated in the privacy policy.
-- A privacy policy and terms of service are needed before public launch, and they should be part of the attorney review below.
+- The privacy policy and terms of service are tracked in the Launch checklist.
 - Backend stack and hosting are undecided; see Architecture direction.
 
 ## Architecture direction
@@ -249,11 +258,22 @@ This section states the product's requirements on the architecture. The decision
 ## Disclaimers and legal guardrails
 
 - **Training aid, not legal advice.** Shown on the landing page, acknowledged once before the first scenario, and shown on every result screen. Proposed wording: "Hold Fire is a training aid for practicing judgment. It is not legal advice, and a score is not a legal opinion on whether any use of force would be lawful. Self-defense law varies by jurisdiction; consult a qualified attorney and your local law." wording, to be reviewed.
-- **Grades and feedback are not legal conclusions.** The prompt forbids legal-conclusion language, and feedback is checked for it (see Grading design).
+- **Grades and feedback are not legal conclusions.** The result screen and the feedback must not describe the call as legal, lawful, justified or unjustified in a legal sense. The prompt forbids legal-conclusion language, and feedback is checked for it (see Grading design).
 - **No third-party names or logos.** No NRA or other organization's names, logos or course names in the product or its marketing. Keith's NRA Pistol Instructor certification does not cover this product, so it is not used to endorse or certify it.
 - **No claim of certification or qualification.** Completing scenarios or high scores do not count toward any permit, license or course requirement, and the product does not say they do.
 - **Attorney review recommended** before public launch, covering the disclaimer wording, terms of service, privacy policy, the expected answers' framing (so they read as tactics and judgment, not legal guidance), and any liability exposure from a trainee relying on a score.
 - **Age gate:** open (see Open questions).
+
+## Launch checklist
+
+Each item must be done before public launch.
+
+- [ ] Privacy policy published.
+- [ ] Terms of service published.
+- [ ] Attorney review completed, covering the privacy policy, the terms of service and the matters listed in Disclaimers and legal guardrails.
+- [ ] Age gate decided and in place (see Open questions).
+
+Trainee answers are sent to a third-party model provider for grading, and the privacy policy must say so (see Accounts and data for the check on the provider's training terms).
 
 ## Business context
 
@@ -314,7 +334,8 @@ Automated tests are written as part of building each requirement, not afterwards
 | T11 | Audit log (19) | Integration | Each admin write action records who, what and when. Table-driven over the admin actions. |
 | T12 | Scenario versioning (16) | Integration | Editing a published scenario (including its sample answers) creates a new version, and past attempts still point to the version they were graded against. |
 | T13 | History, repeats and grade disputes (11, 12, Grade disputes) | Integration; Component | Integration: repeated attempts are stored separately, and a flag with its note shows up in the admin list with prompt and model versions. Component: the flag control on the result and history views. |
-| T14 | Reporting (20, 21, 22) | Unit; Integration | Unit: the aggregation math (completions, average score, release-to-first-run time, Shoot/No Shoot split, wrong-call share, flags) on fixed data. Integration: report responses contain no reasoning text. |
+| T14 | Reporting (20, 21, 22, 24, 25) | Unit; Integration | Unit: the aggregation math (completions, average score, release-to-first-run time, Shoot/No Shoot split, wrong-call share, flags, completion share, cost per grade) on fixed data. Integration: report responses contain no reasoning text, and an attempt abandoned after Ready is stored so it counts in the completion share. |
+| T15 | Grading latency and usage recording (23, 25) | Unit; Integration; Backend E2E (LLM) | Unit: the submit-to-graded time is computed with a fake clock, including time spent on retries. Integration: a graded attempt is saved with its grading time and the token usage from the stub LLM's response. Backend E2E: the calibration run reports 95th-percentile grading time against the 10-second target, since only the real model shows real latency. |
 
 **Exploratory testing.** Each feature PR lists the charters it ran and their results. The cheapest way to record them is a checklist in the PR description, using the "Exploratory testing" section of the PR template. It has one line per charter: the charter, the result (pass, or a link to the issue it found) and a short note. Attach a screenshot only when something fails. This needs no extra tooling, and the record merges with the PR. Starting charters for iteration 1:
 
@@ -346,7 +367,7 @@ Automated tests are written as part of building each requirement, not afterwards
 - **Grading model.** Sonnet 5.5 versus a cheaper model, decided by the calibration set and cost per grade. Owner: Keith.
 - **Retention of reasoning text.** How long attempts are kept (for example, until account deletion, or a fixed period). Owner: Keith, with attorney input.
 - **Replay and library size.** How many scenarios at beta launch, how often new ones publish, and whether repeating a scenario counts toward history and progress. Owner: Keith.
-- **Spaced resurfacing.** Spaced practice beats massed practice (Cepeda et al., 2006 and 2008; Dunlosky et al., 2013), which supports bringing earlier scenarios back on a schedule alongside new releases. Whether to do this, and how, belongs in the training session PRD. Owner: Keith.
+- **Spaced resurfacing.** Spaced practice beats massed practice (Cepeda et al., 2006 and 2008; Dunlosky et al., 2013), which supports bringing earlier scenarios back on a schedule alongside new releases. Whether to do this, and how, belongs in the Scenario run PRD. Owner: Keith.
 - **No-decision scoring.** How a "no decision" attempt is scored (for example 0, like a wrong call) and shown in history and reports. Owner: Keith.
 - **Age gate.** Minimum age to use the product, and whether to verify it or only ask. Owner: Keith, with attorney input.
 - **Beta users after launch.** Whether the beta users Keith enrolls get a lifetime free account. Owner: Keith.
@@ -365,3 +386,4 @@ Video and multi-image scenarios, tap-to-shoot timing, trainer and agency feature
 | Version | Date | Summary |
 | --- | --- | --- |
 | 0.1 | 2026-11-26 | Initial draft of the iteration 1 product PRD. |
+| 0.2 | 2026-11-27 | Clean-up: status set to Accepted, duplicated rules consolidated, metric requirements and launch checklist added. |
