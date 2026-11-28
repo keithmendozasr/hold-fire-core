@@ -6,7 +6,7 @@
 | Date | 2026-11-27 |
 | Author | Keith Mendoza |
 | Owner | Keith Mendoza |
-| Status | Draft |
+| Status | Accepted |
 | Related ADRs | none yet |
 
 This is the product-level PRD for the first iteration of Hold Fire (holdfire.app). Feature-level PRDs will follow it. The section layout follows the repository's `docs/prd/TEMPLATE.md`.
@@ -386,4 +386,4 @@ Video and multi-image scenarios, tap-to-shoot timing, trainer and agency feature
 | Version | Date | Summary |
 | --- | --- | --- |
 | 0.1 | 2026-11-26 | Initial draft of the iteration 1 product PRD. |
-| 0.2 | 2026-11-27 | Clean-up: status set to Draft, duplicated rules consolidated, metric requirements and launch checklist added. |
+| 0.2 | 2026-11-27 | Clean-up: status set to Accepted, duplicated rules consolidated, metric requirements and launch checklist added. |
