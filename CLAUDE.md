@@ -44,7 +44,7 @@ This repo is public and source-available under BUSL-1.1.
 
 ## Product guardrails
 
-- Hold Fire is a **training aid, not legal advice**. Keep that disclaimer visible up front and never present grades or feedback as legal conclusions.
+- Hold Fire is a **training aid, not legal advice**. Follow the disclaimer and legal-guardrail rules in [PRD 0001](docs/prd/0001-product-vision.md#disclaimers-and-legal-guardrails).
 - Keep third-party organizations' names and logos off the product.
 - Treat user-submitted text as untrusted: fence it off from LLM prompts, never interpolate it as instructions.
 - Validate LLM output against a schema and reject or retry anything that does not conform.
