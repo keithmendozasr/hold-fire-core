@@ -346,7 +346,7 @@ Automated tests are written as part of building each requirement, not afterwards
 - **Grading model.** Sonnet 5.5 versus a cheaper model, decided by the calibration set and cost per grade. Owner: Keith.
 - **Retention of reasoning text.** How long attempts are kept (for example, until account deletion, or a fixed period). Owner: Keith, with attorney input.
 - **Replay and library size.** How many scenarios at beta launch, how often new ones publish, and whether repeating a scenario counts toward history and progress. Owner: Keith.
-- **Spaced resurfacing.** Spaced practice beats massed practice (Cepeda et al., 2006 and 2008; Dunlosky et al., 2013), which supports bringing earlier scenarios back on a schedule alongside new releases. Whether to do this, and how, belongs in the training session PRD. Owner: Keith.
+- **Spaced resurfacing.** Spaced practice beats massed practice (Cepeda et al., 2006 and 2008; Dunlosky et al., 2013), which supports bringing earlier scenarios back on a schedule alongside new releases. Whether to do this, and how, belongs in the Scenario run PRD. Owner: Keith.
 - **No-decision scoring.** How a "no decision" attempt is scored (for example 0, like a wrong call) and shown in history and reports. Owner: Keith.
 - **Age gate.** Minimum age to use the product, and whether to verify it or only ask. Owner: Keith, with attorney input.
 - **Beta users after launch.** Whether the beta users Keith enrolls get a lifetime free account. Owner: Keith.
