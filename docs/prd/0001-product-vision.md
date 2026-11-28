@@ -33,7 +33,7 @@ Hold Fire targets that gap with short, repeatable scenarios that reward noticing
 2. Grading is consistent: the same answer to the same scenario gets the same whole-number score across repeated runs.
 3. Feedback teaches. It explains the score and weaves the scene's correct reading into that explanation, rather than handing over a separate answer key.
 4. The trainee can review their past attempts, scores and feedback.
-5. The "training aid, not legal advice" disclaimer is visible up front and on every result.
+5. The training-aid disclaimer is shown as set out in Disclaimers and legal guardrails.
 6. Keith can author a scenario (text, image, image description and expected answer) and its 0/3/5 sample answers, publish it, and tune the grading prompt, all without a code change, through an admin console that also manages users and discount codes.
 7. A new scenario is released every one to two weeks, so trainees have a steady reason to come back.
 8. Keith can see how scenarios perform: who completed each one, average scores, and how long after release trainees run it.
@@ -53,7 +53,7 @@ Hold Fire targets that gap with short, repeatable scenarios that reward noticing
 
 ## User flow
 
-1. **Landing and disclaimer.** The trainee lands on holdfire.app. The "training aid, not legal advice" disclaimer is on the landing page, and the trainee must acknowledge it once before their first scenario.
+1. **Landing and disclaimer.** The trainee lands on holdfire.app and meets the disclaimer as set out in Disclaimers and legal guardrails.
 2. **Sign in.** An account is required for everything, including trying a first scenario; there is no anonymous sample. The landing page shows a description with screenshots so visitors can decide whether they like what they see. In iteration 1 Keith creates beta accounts through the admin console; whether people can also sign up on their own is open (see Open questions).
 3. **Pick a scenario.** The trainee chooses from the library, or takes the next one they have not done. Scenarios they have already done are marked.
 4. **Read the scenario.** The written context appears (where they are, what they hear, what is happening). There is no time limit on reading.
@@ -82,7 +82,7 @@ Numbered so ADRs, issues and tests can cite them.
 
 7. The system must grade each submitted attempt as described in Grading design and show the score and feedback.
 8. The decision (Shoot or No Shoot) must be checked against the scenario's correct decision in code. A wrong call scores 0 regardless of the reasoning.
-9. The result screen must show the disclaimer and must not describe the call as legal, lawful, justified or unjustified in a legal sense.
+9. The result screen must show the disclaimer, and grades and feedback must not read as legal conclusions, as set out in Disclaimers and legal guardrails.
 10. If grading fails after retries, the system must save the attempt as "not graded", tell the trainee, and let them retry grading without redoing the scenario.
 
 ### History
@@ -249,7 +249,7 @@ This section states the product's requirements on the architecture. The decision
 ## Disclaimers and legal guardrails
 
 - **Training aid, not legal advice.** Shown on the landing page, acknowledged once before the first scenario, and shown on every result screen. Proposed wording: "Hold Fire is a training aid for practicing judgment. It is not legal advice, and a score is not a legal opinion on whether any use of force would be lawful. Self-defense law varies by jurisdiction; consult a qualified attorney and your local law." wording, to be reviewed.
-- **Grades and feedback are not legal conclusions.** The prompt forbids legal-conclusion language, and feedback is checked for it (see Grading design).
+- **Grades and feedback are not legal conclusions.** The result screen and the feedback must not describe the call as legal, lawful, justified or unjustified in a legal sense. The prompt forbids legal-conclusion language, and feedback is checked for it (see Grading design).
 - **No third-party names or logos.** No NRA or other organization's names, logos or course names in the product or its marketing. Keith's NRA Pistol Instructor certification does not cover this product, so it is not used to endorse or certify it.
 - **No claim of certification or qualification.** Completing scenarios or high scores do not count toward any permit, license or course requirement, and the product does not say they do.
 - **Attorney review recommended** before public launch, covering the disclaimer wording, terms of service, privacy policy, the expected answers' framing (so they read as tactics and judgment, not legal guidance), and any liability exposure from a trainee relying on a score.
